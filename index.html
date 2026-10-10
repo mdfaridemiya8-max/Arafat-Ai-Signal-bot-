@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIP AI SIGNAL BOT</title>
+    <!-- FontAwesome Icons & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #090a0f, #131722, #1a102f);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            overflow-x: hidden;
+        }
+
+        /* Password Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 5, 10, 0.85);
+            backdrop-filter: blur(15px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-card {
+            background: rgba(25, 30, 48, 0.75);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            border-radius: 20px;
+            padding: 30px 25px;
+            width: 90%;
+            max-width: 380px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+            backdrop-filter: blur(20px);
+        }
+
+        .modal-card h2 {
+            font-size: 22px;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #00f3ff, #bc13fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .modal-card p {
+            font-size: 13px;
+            color: #a0aec0;
+            margin-bottom: 20px;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(10, 12, 20, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 15px;
+            text-align: center;
+            outline: none;
+            margin-bottom: 15px;
+            transition: 0.3s;
+        }
+
+        .modal-input:focus {
+            border-color: #00f3ff;
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #00f3ff, #0066ff);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 243, 255, 0.3);
+            transition: 0.3s;
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 243, 255, 0.5);
+        }
+
+        .modal-socials {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .modal-social-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #00f3ff;
+            font-size: 18px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .modal-social-icon:hover {
+            background: #00f3ff;
+            color: #000;
+            box-shadow: 0 0 15px #00f3ff;
+            transform: scale(1.1);
+        }
+
+        /* Main Container */
+        .container {
+            width: 100%;
+            max-width: 420px;
+            background: rgba(20, 24, 38, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
+            display: none; /* Unhidden after password success */
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .brand h1 {
+            font-size: 18px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #00f3ff, #bc13fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(0,243,255,0.3);
+        }
+
+        .brand p {
+            font-size: 11px;
+            color: #8a99ad;
+        }
+
+        .tg-header-btn {
+            background: rgba(0, 243, 255, 0.1);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            color: #00f3ff;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.3s;
+        }
+
+        .tg-header-btn:hover {
+            background: #00f3ff;
+            color: #000;
+            box-shadow: 0 0 12px rgba(0, 243, 255, 0.6);
+        }
+
+        /* Mode Selector Tabs */
+        .modes-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .mode-tab {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 10px;
+            border-radius: 14px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .mode-tab.active {
+            background: linear-gradient(135deg, rgba(0, 243, 255, 0.15), rgba(188, 19, 254, 0.15));
+            border-color: #00f3ff;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+        }
+
+        .mode-tab h3 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .mode-tab span {
+            font-size: 10px;
+            color: #00f3ff;
+        }
+
+        /* Signal Display Card */
+        .signal-card {
+            background: rgba(12, 15, 25, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            margin-bottom: 20px;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .period-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #8a99ad;
+            margin-bottom: 12px;
+        }
+
+        .period-info span span {
+            color: #00f3ff;
+            font-weight: 600;
+        }
+
+        .timer-display {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #00f3ff;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
+        }
+
+        .result-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            min-height: 55px;
+            align-items: center;
+        }
+
+        .indicator-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 8px 16px;
+            border-radius: 10px;
+            min-width: 80px;
+        }
+
+        .indicator-box label {
+            display: block;
+            font-size: 9px;
+            color: #8a99ad;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .indicator-box value, .indicator-box span.val {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .num-circle {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #00f3ff, #0066ff);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            font-weight: 700;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
+            margin: 0 auto;
+        }
+
+        /* Action Button */
+        .signal-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #00f3ff, #bc13fe);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0, 243, 255, 0.3);
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .signal-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(188, 19, 254, 0.5);
+        }
+
+        .signal-btn:disabled {
+            background: rgba(255, 255, 255, 0.08);
+            color: #6c7a9c;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* History Table Section */
+        .history-section h3 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #8a99ad;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .table-container {
+            max-height: 160px;
+            overflow-y: auto;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .table-container::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb {
+            background: rgba(0, 243, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+            text-align: center;
+        }
+
+        th {
+            background: rgba(15, 18, 30, 0.9);
+            color: #8a99ad;
+            padding: 8px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        td {
+            padding: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: #cbd5e1;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Password Modal -->
+    <div class="modal-overlay" id="passwordModal">
+        <div class="modal-card">
+            <h2>VIP AI SIGNAL BOT</h2>
+            <p>পাসওয়ার্ড নিতে যোগাযোগ করুন</p>
+            <input type="password" id="passwordInput" class="modal-input" placeholder="Enter Password">
+            <button class="modal-btn" onclick="checkPassword()">ACCESS BOT</button>
+            <div class="modal-socials">
+                <a href="https://t.me/r7xnayem" target="_blank" class="modal-social-icon" title="Telegram 1"><i class="fab fa-telegram-plane"></i></a>
+                <a href="https://t.me/OPU_King_6334" target="_blank" class="modal-social-icon" title="Telegram 2"><i class="fab fa-telegram-plane"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div class="container" id="appContainer">
+        <!-- Header -->
+        <div class="header">
+            <div class="brand">
+                <h1>VIP AI SIGNAL</h1>
+                <p>Owner: Arafat (@@OPU_King_6334)</p>
+            </div>
+            <a href="https://t.me/rayhan_903" target="_blank" class="tg-header-btn">
+                <i class="fab fa-telegram-plane"></i> Support
+            </a>
+        </div>
+
+        <!-- Mode Selectors -->
+        <div class="modes-container">
+            <div class="mode-tab active" id="mode30s" onclick="switchMode(30)">
+                <h3>Win Go 30s</h3>
+                <span>Interval: 30s</span>
+            </div>
+            <div class="mode-tab" id="mode1m" onclick="switchMode(60)">
+                <h3>Win Go 1m</h3>
+                <span>Interval: 60s</span>
+            </div>
+        </div>
+
+        <!-- Signal Card -->
+        <div class="signal-card">
+            <div class="period-info">
+                <span>Period: <span id="periodNumber">---</span></span>
+                <span>Status: <span id="botStatus" style="color: #00f3ff;">READY</span></span>
+            </div>
+
+            <div class="timer-display" id="timerDisplay">00:00</div>
+
+            <div class="result-indicators" id="resultArea">
+                <span style="font-size: 12px; color: #8a99ad;">Click below to generate AI prediction</span>
+            </div>
+
+            <button class="signal-btn" id="signalBtn" onclick="generateSignal()">GET SIGNAL</button>
+        </div>
+
+        <!-- History Table -->
+        <div class="history-section">
+            <h3><i class="fas fa-history"></i> Signal History (Last 10 Rounds)</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Period</th>
+                            <th>Number</th>
+                            <th>Big/Small</th>
+                            <th>Color</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                        <!-- History rows will populate here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentIntervalSeconds = 30; // Default 30s mode
+        let currentPeriod = "";
+        let timerInterval = null;
+        let hasClaimedCurrentPeriod = false;
+        let historyData = [];
+
+        // Password Authentication
+        function checkPassword() {
+            const pass = document.getElementById('passwordInput').value.trim();
+            if (pass === "arafat109025") {
+                document.getElementById('passwordModal').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('passwordModal').style.display = 'none';
+                    document.getElementById('appContainer').style.display = 'block';
+                    initTimer();
+                }, 300);
+            } else {
+                alert("ভুল পাসওয়ার্ড! সঠিক পাসওয়ার্ড দিয়ে প্রবেশ করুন।");
+                document.getElementById('passwordInput').value = "";
+            }
+        }
+
+        // Switch Modes (30s or 60s)
+        function switchMode(seconds) {
+            currentIntervalSeconds = seconds;
+            hasClaimedCurrentPeriod = false;
+            
+            if (seconds === 30) {
+                document.getElementById('mode30s').classList.add('active');
+                document.getElementById('mode1m').classList.remove('active');
+            } else {
+                document.getElementById('mode1m').classList.add('active');
+                document.getElementById('mode30s').classList.remove('active');
+            }
+
+            resetSignalDisplay();
+            initTimer();
+        }
+
+        // Timer Logic
+        function initTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            
+            updateTimerTick();
+            timerInterval = setInterval(updateTimerTick, 1000);
+        }
+
+        function updateTimerTick() {
+            const now = new Date();
+            const totalSeconds = Math.floor(now.getTime() / 1000);
+            
+            const periodSecs = totalSeconds % currentIntervalSeconds;
+            const remainingSecs = currentIntervalSeconds - periodSecs;
+            
+            // Format timer display
+            const minutes = Math.floor(remainingSecs / 60);
+            const seconds = remainingSecs % 60;
+            document.getElementById('timerDisplay').innerText = 
+                `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+            // Generate unique period string
+            const periodIdBase = Math.floor(totalSeconds / currentIntervalSeconds);
+            const newPeriod = `${now.toISOString().slice(0,10).replace(/-/g,'')}${currentIntervalSeconds === 30 ? '30' : '60'}${1000 + (periodIdBase % 1000)}`;
+
+            if (newPeriod !== currentPeriod) {
+                currentPeriod = newPeriod;
+                hasClaimedCurrentPeriod = false;
+                document.getElementById('periodNumber').innerText = currentPeriod;
+                resetSignalDisplay();
+            }
+        }
+
+        function resetSignalDisplay() {
+            if (!hasClaimedCurrentPeriod) {
+                document.getElementById('resultArea').innerHTML = `<span style="font-size: 12px; color: #8a99ad;">Click below to generate AI prediction</span>`;
+                const btn = document.getElementById('signalBtn');
+                btn.disabled = false;
+                btn.innerText = "GET SIGNAL";
+                document.getElementById('botStatus').innerText = "READY";
+                document.getElementById('botStatus').style.color = "#00f3ff";
+            }
+        }
+
+        // Generate Signal Logic
+        function generateSignal() {
+            if (hasClaimedCurrentPeriod) return;
+
+            hasClaimedCurrentPeriod = true;
+            const btn = document.getElementById('signalBtn');
+            btn.disabled = true;
+            btn.innerText = "WAIT FOR NEXT ROUND ⏳";
+            document.getElementById('botStatus').innerText = "LOCKED";
+            document.getElementById('botStatus').style.color = "#bc13fe";
+
+            // Random Prediction Calculation
+            const randomNum = Math.floor(Math.random() * 10); // 0 to 9
+            const isBig = randomNum >= 5;
+            const sizeText = isBig ? "BIG" : "SMALL";
+            const sizeColor = isBig ? "#00f3ff" : "#ffaa00";
+
+            let colorText = "";
+            let colorHex = "";
+            if (randomNum === 0) {
+                colorText = "Red/Violet";
+                colorHex = "linear-gradient(135deg, #ff4d4d, #bc13fe)";
+            } else if (randomNum === 5) {
+                colorText = "Green/Violet";
+                colorHex = "linear-gradient(135deg, #00e676, #bc13fe)";
+            } else if (randomNum % 2 === 1) {
+                colorText = "Green";
+                colorHex = "#00e676";
+            } else {
+                colorText = "Red";
+                colorHex = "#ff4d4d";
+            }
+
+            // Render result in UI
+            document.getElementById('resultArea').innerHTML = `
+                <div class="indicator-box">
+                    <label>Number</label>
+                    <div class="num-circle" style="background: ${colorHex}">${randomNum}</div>
+                </div>
+                <div class="indicator-box">
+                    <label>Size</label>
+                    <span class="val" style="color: ${sizeColor};">${sizeText}</span>
+                </div>
+                <div class="indicator-box">
+                    <label>Color</label>
+                    <span class="val" style="color: ${randomNum === 0 || randomNum === 5 ? '#bc13fe' : colorHex};">${colorText}</span>
+                </div>
+            `;
+
+            // Add to history table
+            historyData.unshift({
+                period: currentPeriod,
+                number: randomNum,
+                size: sizeText,
+                color: colorText
+            });
+
+            if (historyData.length > 10) {
+                historyData.pop();
+            }
+
+            updateHistoryTable();
+        }
+
+        function updateHistoryTable() {
+            const tbody = document.getElementById('historyTableBody');
+            tbody.innerHTML = "";
+            historyData.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.period.slice(-5)}</td>
+                    <td><b>${item.number}</b></td>
+                    <td style="color: ${item.size === 'BIG' ? '#00f3ff' : '#ffaa00'}">${item.size}</td>
+                    <td>${item.color}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+    </script>
+</body>
+              </html>
